@@ -32,13 +32,14 @@ namespace FoodOrderingApi.Models
             _repoWrapper.Save();
         }
 
-        internal int NewCart()
+        // creates a new cart and returns it
+        internal Cart NewCart()
         {
             var newCart = new Cart();
             _repoWrapper.Cart.Create(newCart);
             _repoWrapper.Save();
 
-            return newCart.CartId;
+            return newCart;
         }
 
         private void UpdateTotalPrice(int cartId)
@@ -46,6 +47,7 @@ namespace FoodOrderingApi.Models
             // get cart
             Cart cart = _repoWrapper.Cart.FindByCondition(x => x.CartId.Equals(cartId)).Single();
 
+            // tally the prices of each selection
             double newTotal = 0;
             foreach (Selection selection in cart.Selections)
             {

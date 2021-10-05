@@ -45,11 +45,11 @@ namespace FoodOrderingApi.Controllers
 
         // PUT api/<SelectionController>/5
         // change quantity
-        [HttpPut("{cartId}/{menuItemId}")]
-        public void Put(int cartId, int menuItemId, [FromBody] int value)
+        [HttpPut("{cartId}/{menuItemId}/{changeInQty}")]
+        public void Put(int cartId, int menuItemId, int changeInQty)
         {
             var currentSelection = Get(cartId, menuItemId);
-            _cartManager.UpdateSelectionQty(currentSelection, value);
+            _cartManager.UpdateSelectionQty(currentSelection, changeInQty);
         }
 
         // DELETE api/<SelectionController>/5
