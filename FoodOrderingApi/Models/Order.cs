@@ -9,10 +9,13 @@ namespace FoodOrderingApi.Models
 {
     public class Order
     {
-        // Primary Key & Navigational
-        [Key, ForeignKey("Cart")]
+        
+        [Key]
+        public int OrderId { get; set; }
+        
+        [Required, ForeignKey("Cart")]
         public int CartId { get; set; }
-        public Cart Cart { get; set; }
+        public virtual Cart Cart { get; set; }
 
 
         // Other Attributes

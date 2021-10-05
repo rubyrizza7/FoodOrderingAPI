@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodOrderingApi.Migrations
 {
     [DbContext(typeof(OrderingContext))]
-    [Migration("20211004234616_init")]
-    partial class init
+    [Migration("20211005034124_remove_unique")]
+    partial class remove_unique
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,9 @@ namespace FoodOrderingApi.Migrations
             modelBuilder.Entity("FoodOrderingApi.Models.Cart", b =>
                 {
                     b.Property<int>("CartId")
-                        .HasColumnType("int");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double>("TotalPrice")
                         .HasColumnType("float");
@@ -32,6 +34,13 @@ namespace FoodOrderingApi.Migrations
                     b.HasKey("CartId");
 
                     b.ToTable("Carts");
+
+                    b.HasData(
+                        new
+                        {
+                            CartId = 1,
+                            TotalPrice = 0.0
+                        });
                 });
 
             modelBuilder.Entity("FoodOrderingApi.Models.MenuItem", b =>
@@ -73,15 +82,21 @@ namespace FoodOrderingApi.Migrations
 
             modelBuilder.Entity("FoodOrderingApi.Models.Order", b =>
                 {
-                    b.Property<int>("CartId")
+                    b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("TimePlaced")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("CartId");
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("CartId")
+                        .IsUnique();
 
                     b.ToTable("Orders");
                 });
@@ -102,24 +117,20 @@ namespace FoodOrderingApi.Migrations
 
                     b.HasKey("MenuItemId", "CartId");
 
-                    b.HasIndex("CartId")
-                        .IsUnique();
-
-                    b.HasIndex("MenuItemId")
-                        .IsUnique();
+                    b.HasIndex("CartId");
 
                     b.ToTable("Selections");
                 });
 
-            modelBuilder.Entity("FoodOrderingApi.Models.Cart", b =>
+            modelBuilder.Entity("FoodOrderingApi.Models.Order", b =>
                 {
-                    b.HasOne("FoodOrderingApi.Models.Order", "Order")
-                        .WithOne("Cart")
-                        .HasForeignKey("FoodOrderingApi.Models.Cart", "CartId")
+                    b.HasOne("FoodOrderingApi.Models.Cart", "Cart")
+                        .WithOne("Order")
+                        .HasForeignKey("FoodOrderingApi.Models.Order", "CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Order");
+                    b.Navigation("Cart");
                 });
 
             modelBuilder.Entity("FoodOrderingApi.Models.Selection", b =>
@@ -130,26 +141,25 @@ namespace FoodOrderingApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FoodOrderingApi.Models.MenuItem", null)
+                    b.HasOne("FoodOrderingApi.Models.MenuItem", "MenuItem")
                         .WithMany("Selections")
                         .HasForeignKey("MenuItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("MenuItem");
                 });
 
             modelBuilder.Entity("FoodOrderingApi.Models.Cart", b =>
                 {
+                    b.Navigation("Order");
+
                     b.Navigation("Selections");
                 });
 
             modelBuilder.Entity("FoodOrderingApi.Models.MenuItem", b =>
                 {
                     b.Navigation("Selections");
-                });
-
-            modelBuilder.Entity("FoodOrderingApi.Models.Order", b =>
-                {
-                    b.Navigation("Cart");
                 });
 #pragma warning restore 612, 618
         }

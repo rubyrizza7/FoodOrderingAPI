@@ -25,14 +25,13 @@ namespace FoodOrderingApi.Context
             // Map Selection - one to many with MenuItem and Cart - FK's as combo primary key
             var selectionEtb = modelBuilder.Entity<Selection>();
             selectionEtb.HasKey(cd => new { cd.MenuItemId, cd.CartId });
-            selectionEtb.HasIndex(cd => cd.MenuItemId).IsUnique();
-            selectionEtb.HasIndex(cd => cd.CartId).IsUnique();
+            
 
             // Map Order - one to one or zero
             modelBuilder.Entity<Order>()
             .HasOne(a => a.Cart)
-            .WithOne(b => b.Order)
-            .HasForeignKey<Cart>(b => b.CartId);
+            .WithOne(a => a.Order);
+
 
             // add some data
             modelBuilder.Entity<MenuItem>().HasData(new MenuItem
@@ -47,6 +46,12 @@ namespace FoodOrderingApi.Context
                 Name = "Big Pizza",
                 Description = "Lots of Tomato, Cheese on base",
                 Price = 16.50
+            });
+
+            // add an empty cart to start off with
+            modelBuilder.Entity<Cart>().HasData(new Cart
+            {
+                CartId = 1
             });
         }
     }

@@ -8,6 +8,19 @@ namespace FoodOrderingApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Carts",
+                columns: table => new
+                {
+                    CartId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TotalPrice = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Carts", x => x.CartId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MenuItems",
                 columns: table => new
                 {
@@ -26,29 +39,18 @@ namespace FoodOrderingApi.Migrations
                 name: "Orders",
                 columns: table => new
                 {
-                    CartId = table.Column<int>(type: "int", nullable: false)
+                    OrderId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    CartId = table.Column<int>(type: "int", nullable: false),
                     TimePlaced = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.CartId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Carts",
-                columns: table => new
-                {
-                    CartId = table.Column<int>(type: "int", nullable: false),
-                    TotalPrice = table.Column<double>(type: "float", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Carts", x => x.CartId);
+                    table.PrimaryKey("PK_Orders", x => x.OrderId);
                     table.ForeignKey(
-                        name: "FK_Carts_Orders_CartId",
+                        name: "FK_Orders_Carts_CartId",
                         column: x => x.CartId,
-                        principalTable: "Orders",
+                        principalTable: "Carts",
                         principalColumn: "CartId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -80,6 +82,11 @@ namespace FoodOrderingApi.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Carts",
+                columns: new[] { "CartId", "TotalPrice" },
+                values: new object[] { 1, 0.0 });
+
+            migrationBuilder.InsertData(
                 table: "MenuItems",
                 columns: new[] { "MenuItemId", "Description", "Name", "Price" },
                 values: new object[] { 1, "Tomato, Cheese on base", "Pizza", 11.5 });
@@ -88,6 +95,12 @@ namespace FoodOrderingApi.Migrations
                 table: "MenuItems",
                 columns: new[] { "MenuItemId", "Description", "Name", "Price" },
                 values: new object[] { 2, "Lots of Tomato, Cheese on base", "Big Pizza", 16.5 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_CartId",
+                table: "Orders",
+                column: "CartId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Selections_CartId",
@@ -105,6 +118,9 @@ namespace FoodOrderingApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
                 name: "Selections");
 
             migrationBuilder.DropTable(
@@ -112,9 +128,6 @@ namespace FoodOrderingApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "MenuItems");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
         }
     }
 }

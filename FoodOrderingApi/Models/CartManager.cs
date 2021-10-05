@@ -17,10 +17,7 @@ namespace FoodOrderingApi.Models
 
         internal void UpdateSelectionQty(Selection currentSelection, int value)
         {
-            // update value
-            currentSelection.Quantity += value;
-            // update price 
-            currentSelection.SelectionPrice = currentSelection.Quantity * currentSelection.MenuItem.Price;
+            currentSelection.UpdateQty(value);
 
             // if qty > 0 then update existing otherwise delete selection
             if (currentSelection.Quantity > 0)
@@ -32,11 +29,12 @@ namespace FoodOrderingApi.Models
             }
 
             UpdateTotalPrice(currentSelection.CartId);
+            _repoWrapper.Save();
         }
 
 
 
-        internal void UpdateTotalPrice(int cartId)
+        private void UpdateTotalPrice(int cartId)
         {
             // get cart
             Cart cart = _repoWrapper.Cart.FindByCondition(x => x.CartId.Equals(cartId)).Single();
@@ -52,6 +50,24 @@ namespace FoodOrderingApi.Models
             _repoWrapper.Cart.Update(cart);
         }
 
+        internal void NewSelection(NewSelection value)
+        {
+            // get item price
+            double selectionPrice = _repoWrapper.MenuItem.FindByCondition(x => x.MenuItemId.Equals(value.MenuItemId)).Single().Price * value.Quantity;
 
+            // create new selection
+            _repoWrapper.Selection.Create(new Selection { MenuItemId = value.MenuItemId, CartId = value.CartId, Quantity = value.Quantity, SelectionPrice = selectionPrice });
+            _repoWrapper.Save();
+        }
+
+        internal void PlaceOrder(int cartId)
+        {
+            // create new order
+            _repoWrapper.Order.Create(new Order { CartId = cartId, TimePlaced = new DateTime() });
+            // create new cart
+            _repoWrapper.Cart.Create(new Cart());
+
+            _repoWrapper.Save();
+        }
     }
 }

@@ -9,6 +9,8 @@ namespace FoodOrderingApi.Models
 {
     public class Selection
     {
+        
+
         // Primary Key
         [Key, ForeignKey("MenuItem")]
         public int MenuItemId { get; set; }
@@ -23,6 +25,19 @@ namespace FoodOrderingApi.Models
         // navigational
         public virtual MenuItem MenuItem { get; set; }
 
+        internal void UpdateQty(int changeInQty)
+        {
+            // update value
+            Quantity += changeInQty;
+            // update price 
+            SelectionPrice = Quantity * MenuItem.Price;
+        }
+    }
 
-}
+    public class NewSelection
+    {
+        public int MenuItemId { get; set; }
+        public int CartId { get; set; }
+        public int Quantity { get; set; }
+    }
 }

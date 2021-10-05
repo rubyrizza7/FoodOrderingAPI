@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FoodOrderingApi.Controllers
 {
@@ -39,9 +38,9 @@ namespace FoodOrderingApi.Controllers
         // POST api/<SelectionController>
         [HttpPost]
         // Add to cart button
-        public void Post([FromBody] Selection value)
+        public void Post([FromBody] NewSelection value)
         {
-            _repoWrapper.Selection.Create(value);
+            _cartManager.NewSelection(value);
         }
 
         // PUT api/<SelectionController>/5

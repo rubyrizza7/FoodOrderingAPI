@@ -40,6 +40,7 @@ namespace FoodOrderingApi.Controllers
         public void Post([FromBody] MenuItem value)
         {
             _repoWrapper.MenuItem.Create(value);
+            _repoWrapper.Save();
         }
 
         // PUT api/<MenuController>/5
@@ -47,6 +48,7 @@ namespace FoodOrderingApi.Controllers
         public void Put([FromBody] MenuItem value)
         {
             _repoWrapper.MenuItem.Update(value);
+            _repoWrapper.Save();
         }
 
         // DELETE api/<MenuController>/5
@@ -54,6 +56,7 @@ namespace FoodOrderingApi.Controllers
         public void Delete(int id)
         {
             _repoWrapper.MenuItem.Delete(Get(id));
+            _repoWrapper.Save();
         }
     }
 }
