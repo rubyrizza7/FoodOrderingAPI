@@ -26,14 +26,17 @@ namespace FoodOrderingApi.Models
         public void Create(T entity)
         {
             this.OrderingContext.Set<T>().Add(entity);
+            this.OrderingContext.SaveChanges();
         }
         public void Update(T entity)
         {
             this.OrderingContext.Set<T>().Update(entity);
+            this.OrderingContext.SaveChanges();
         }
         public void Delete(T entity)
         {
             this.OrderingContext.Set<T>().Remove(entity);
+            this.OrderingContext.SaveChanges();
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FoodOrderingApi.Models;
+using FoodOrderingApi.Models.DataAccess.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,36 +14,46 @@ namespace FoodOrderingApi.Controllers
     [ApiController]
     public class MenuController : ControllerBase
     {
+
+        private IRepositoryWrapper _repoWrapper;
+        public MenuController(IRepositoryWrapper repoWrapper)
+        {
+            _repoWrapper = repoWrapper;
+        }
+
         // GET: api/<MenuController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<MenuItem> Get()
         {
-            return new string[] { "value1", "value2" };
+            return _repoWrapper.MenuItem.GetAll();
         }
 
         // GET api/<MenuController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public MenuItem Get(int id)
         {
-            return "value";
+            return _repoWrapper.MenuItem.FindByCondition(x => x.MenuItemId.Equals(id)).Single();
         }
 
         // POST api/<MenuController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] MenuItem value)
         {
+            _repoWrapper.MenuItem.Create(value);
         }
 
         // PUT api/<MenuController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut()]
+        public void Put([FromBody] MenuItem value)
         {
+            _repoWrapper.MenuItem.Update(value);
         }
 
         // DELETE api/<MenuController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            _repoWrapper.MenuItem.Delete(Get(id));
         }
     }
 }
