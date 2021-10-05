@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrderingApi.Models.DataAccess
 {
-    public class MenuItemRepository : DataRepository<MenuItem>, IMenuItemRepository
+    public class MenuItemRepository : DataRepository<MenuItem>, IDataRepository<MenuItem>
     {
         public MenuItemRepository(OrderingContext context)
             : base(context)

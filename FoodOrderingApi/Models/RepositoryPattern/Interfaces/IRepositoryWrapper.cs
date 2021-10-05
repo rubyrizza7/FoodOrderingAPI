@@ -8,10 +8,10 @@ namespace FoodOrderingApi.Models.DataAccess.Interfaces
  
     public interface IRepositoryWrapper
     {
-        IMenuItemRepository MenuItem { get; }
-        ISelectionRepository Selection { get; }
-        IOrderRepository Order { get; }
-        ICartRepository Cart { get; }
+        public IDataRepository<MenuItem> MenuItem { get; }
+        public IDataRepository<Selection> Selection { get; }
+        public IDataRepository<Order> Order { get; }
+        public IDataRepository<Cart> Cart { get; }
         void Save();
     }
     

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrderingApi.Models.DataAccess
 {
-    public class OrderRepository : DataRepository<Order>, IOrderRepository
+    public class OrderRepository : DataRepository<Order>, IDataRepository<Order>
     {
         public OrderRepository(OrderingContext context)
             : base(context)

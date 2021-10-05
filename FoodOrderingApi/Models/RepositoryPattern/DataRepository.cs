@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrderingApi.Models
 {
-    public abstract class DataRepository<T> : IDataRepository<T> where T : class
+    public class DataRepository<T> : IDataRepository<T> where T : class
     {
         protected OrderingContext OrderingContext { get; set; }
         public DataRepository(OrderingContext context)

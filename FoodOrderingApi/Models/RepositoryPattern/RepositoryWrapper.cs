@@ -10,18 +10,18 @@ namespace FoodOrderingApi.Models.DataAccess
     public class RepositoryWrapper : IRepositoryWrapper
     {
         private OrderingContext _repoContext;
-        private IMenuItemRepository _menuItem;
-        private ISelectionRepository _selection;
-        private IOrderRepository _order;
-        private ICartRepository _cart;
-        public IMenuItemRepository MenuItem
+        private IDataRepository<MenuItem> _menuItem;
+        private IDataRepository<Selection> _selection;
+        private IDataRepository<Order> _order;
+        private IDataRepository<Cart> _cart;
+        public IDataRepository<MenuItem> MenuItem
         {
             get
             {
                 return _menuItem;
             }
         }
-        public ISelectionRepository Selection
+        public IDataRepository<Selection> Selection
         {
             get
             {
@@ -29,7 +29,7 @@ namespace FoodOrderingApi.Models.DataAccess
             }
         }
 
-        public IOrderRepository Order
+        public IDataRepository<Order> Order
         {
             get
             {
@@ -37,7 +37,7 @@ namespace FoodOrderingApi.Models.DataAccess
             }
         }
 
-        public ICartRepository Cart
+        public IDataRepository<Cart> Cart
         {
             get
             {
@@ -45,7 +45,7 @@ namespace FoodOrderingApi.Models.DataAccess
             }
         }
 
-        public RepositoryWrapper(OrderingContext context, IMenuItemRepository menuRepo, ISelectionRepository selectionRepo, ICartRepository cartRepo, IOrderRepository orderRepo)
+        public RepositoryWrapper(OrderingContext context, IDataRepository<MenuItem> menuRepo, IDataRepository<Selection> selectionRepo, IDataRepository<Cart> cartRepo, IDataRepository<Order> orderRepo)
         {
             _repoContext = context;
             _menuItem = menuRepo;
