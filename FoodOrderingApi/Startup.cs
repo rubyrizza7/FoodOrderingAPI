@@ -1,4 +1,5 @@
 using FoodOrderingApi.Context;
+using FoodOrderingApi.Models;
 using FoodOrderingApi.Models.DataAccess;
 using FoodOrderingApi.Models.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -34,8 +35,9 @@ namespace FoodOrderingApi
             services.AddDbContext<OrderingContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("FoodOrderingDB")));
 
-            // add repository wrapper
+            // add repository
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped(typeof(IDataRepository<>), typeof(DataRepository<>));
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

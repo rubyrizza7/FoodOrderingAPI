@@ -18,10 +18,6 @@ namespace FoodOrderingApi.Models.DataAccess
         {
             get
             {
-                if (_menuItem == null)
-                {
-                    _menuItem = new MenuItemRepository(_repoContext);
-                }
                 return _menuItem;
             }
         }
@@ -29,10 +25,6 @@ namespace FoodOrderingApi.Models.DataAccess
         {
             get
             {
-                if (_selection == null)
-                {
-                    _selection = new SelectionRepository(_repoContext);
-                }
                 return _selection;
             }
         }
@@ -41,10 +33,6 @@ namespace FoodOrderingApi.Models.DataAccess
         {
             get
             {
-                if (_order == null)
-                {
-                    _order = new OrderRepository(_repoContext);
-                }
                 return _order;
             }
         }
@@ -53,17 +41,17 @@ namespace FoodOrderingApi.Models.DataAccess
         {
             get
             {
-                if (_cart == null)
-                {
-                    _cart = new CartRepository(_repoContext);
-                }
                 return _cart;
             }
         }
 
-        public RepositoryWrapper(OrderingContext context)
+        public RepositoryWrapper(OrderingContext context, IMenuItemRepository menuRepo, ISelectionRepository selectionRepo, ICartRepository cartRepo, IOrderRepository orderRepo)
         {
             _repoContext = context;
+            _menuItem = menuRepo;
+            _selection = selectionRepo;
+            _cart = cartRepo;
+            _order = orderRepo;
         }
         public void Save()
         {
