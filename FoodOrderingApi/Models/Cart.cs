@@ -11,7 +11,7 @@ namespace FoodOrderingApi.Models
         [Key]
         public int CartId { get; set; }
         public double TotalPrice { get; set; }
-        public virtual Order Order { get; set; }
+        internal virtual Order Order { get; set; }
 
         // Navigation
         public virtual List<Selection> Selections { get; set; }

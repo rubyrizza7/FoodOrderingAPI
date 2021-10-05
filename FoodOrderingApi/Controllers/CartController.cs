@@ -26,9 +26,9 @@ namespace FoodOrderingApi.Controllers
         // GET: api/<CartController>
         // returns the current cart ie the cart with no order assosiated
         [HttpGet]
-        public Cart Get()
+        public IEnumerable<Cart> Get()
         {
-            return _repoWrapper.Cart.FindByCondition(x => x.Order.Equals(null)).Single();
+            return _repoWrapper.Cart.GetAll();
         }
 
         // GET api/<CartController>/5

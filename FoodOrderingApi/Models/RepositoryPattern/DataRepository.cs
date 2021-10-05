@@ -15,11 +15,11 @@ namespace FoodOrderingApi.Models
         {
             this.OrderingContext = context;
         }
-        public IEnumerable<T> GetAll()
+        public virtual IEnumerable<T> GetAll()
         {
             return this.OrderingContext.Set<T>().AsNoTracking();
         }
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
+        public virtual IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
         {
             return this.OrderingContext.Set<T>().Where(expression).AsNoTracking();
         }
@@ -34,7 +34,6 @@ namespace FoodOrderingApi.Models
         public void Delete(T entity)
         {
             this.OrderingContext.Set<T>().Remove(entity);
-            this.OrderingContext.SaveChanges();
         }
     }
 }

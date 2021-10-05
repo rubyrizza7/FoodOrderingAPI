@@ -32,7 +32,14 @@ namespace FoodOrderingApi.Models
             _repoWrapper.Save();
         }
 
+        internal int NewCart()
+        {
+            var newCart = new Cart();
+            _repoWrapper.Cart.Create(newCart);
+            _repoWrapper.Save();
 
+            return newCart.CartId;
+        }
 
         private void UpdateTotalPrice(int cartId)
         {
@@ -63,10 +70,7 @@ namespace FoodOrderingApi.Models
         internal void PlaceOrder(int cartId)
         {
             // create new order
-            _repoWrapper.Order.Create(new Order { CartId = cartId, TimePlaced = new DateTime() });
-            // create new cart
-            _repoWrapper.Cart.Create(new Cart());
-
+            _repoWrapper.Order.Create(new Order { CartId = cartId, TimePlaced = DateTime.Now });
             _repoWrapper.Save();
         }
     }

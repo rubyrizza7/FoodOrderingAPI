@@ -15,6 +15,6 @@ namespace FoodOrderingApi.Models
         public double Price { get; set; }
 
         // Navigation
-        public virtual List<Selection> Selections { get; set; }
+        internal virtual List<Selection> Selections { get; set; }
     }
 }
