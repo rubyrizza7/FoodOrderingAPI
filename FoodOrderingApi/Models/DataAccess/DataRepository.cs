@@ -28,7 +28,7 @@ namespace FoodOrderingApi.Models
             this.OrderingContext.Set<T>().Add(entity);
             this.OrderingContext.SaveChanges();
         }
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             this.OrderingContext.Set<T>().Update(entity);
             this.OrderingContext.SaveChanges();

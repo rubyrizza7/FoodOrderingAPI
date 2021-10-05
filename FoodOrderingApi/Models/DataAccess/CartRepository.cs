@@ -12,5 +12,6 @@ namespace FoodOrderingApi.Models.DataAccess
             : base(context)
         {
         }
+
     }
 }

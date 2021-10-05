@@ -15,5 +15,6 @@ namespace FoodOrderingApi.Models
 
         // Navigation
         public virtual List<Selection> Selections { get; set; }
+
     }
 }

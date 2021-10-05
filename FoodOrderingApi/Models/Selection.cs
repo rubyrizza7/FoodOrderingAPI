@@ -20,6 +20,9 @@ namespace FoodOrderingApi.Models
         public int Quantity { get; set; }
         public double SelectionPrice { get; set; }
 
+        // navigational
+        public virtual MenuItem MenuItem { get; set; }
 
-    }
+
+}
 }
