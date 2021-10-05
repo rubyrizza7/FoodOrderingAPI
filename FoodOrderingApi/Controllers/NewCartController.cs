@@ -12,10 +12,10 @@ namespace FoodOrderingApi.Controllers
     [ApiController]
     public class NewCartController : ControllerBase
     {
-        private CartManager _cartManager;
-        public NewCartController(IRepositoryWrapper repoWrapper)
+        private ICartManager _cartManager;
+        public NewCartController(IRepositoryWrapper repoWrapper, ICartManager cartManager)
         {
-            _cartManager = new CartManager(repoWrapper);
+            _cartManager = cartManager;
         }
 
         // GET: api/<NewCartController>

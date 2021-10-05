@@ -14,11 +14,11 @@ namespace FoodOrderingApi.Controllers
     public class OrderController : ControllerBase
     {
         private IRepositoryWrapper _repoWrapper;
-        private CartManager _cartManager;
-        public OrderController(IRepositoryWrapper repoWrapper)
+        private ICartManager _cartManager;
+        public OrderController(IRepositoryWrapper repoWrapper, ICartManager cartManager)
         {
             _repoWrapper = repoWrapper;
-            _cartManager = new CartManager(repoWrapper);
+            _cartManager = cartManager;
         }
 
         // GET: api/<OrderController>

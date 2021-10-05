@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FoodOrderingApi.Models
 {
-    public class CartManager
+    public class CartManager : ICartManager
     {
         private IRepositoryWrapper _repoWrapper;
         public CartManager(IRepositoryWrapper repoWrapper)
@@ -15,7 +15,7 @@ namespace FoodOrderingApi.Models
             _repoWrapper = repoWrapper;
         }
 
-        internal void UpdateSelectionQty(Selection currentSelection, int value)
+        public void UpdateSelectionQty(Selection currentSelection, int value)
         {
             currentSelection.UpdateQty(value);
 
@@ -24,7 +24,8 @@ namespace FoodOrderingApi.Models
             {
                 _repoWrapper.Selection.Update(currentSelection);
             }
-            else {
+            else
+            {
                 _repoWrapper.Selection.Delete(currentSelection);
             }
 
@@ -33,7 +34,7 @@ namespace FoodOrderingApi.Models
         }
 
         // creates a new cart and returns it
-        internal Cart NewCart()
+        public Cart NewCart()
         {
             var newCart = new Cart();
             _repoWrapper.Cart.Create(newCart);
@@ -42,7 +43,7 @@ namespace FoodOrderingApi.Models
             return newCart;
         }
 
-        private void UpdateTotalPrice(int cartId)
+        public void UpdateTotalPrice(int cartId)
         {
             // get cart
             Cart cart = _repoWrapper.Cart.FindByCondition(x => x.CartId.Equals(cartId)).Single();
@@ -59,7 +60,7 @@ namespace FoodOrderingApi.Models
             _repoWrapper.Cart.Update(cart);
         }
 
-        internal void NewSelection(NewSelection value)
+        public void NewSelection(NewSelection value)
         {
             // get item price
             double selectionPrice = _repoWrapper.MenuItem.FindByCondition(x => x.MenuItemId.Equals(value.MenuItemId)).Single().Price * value.Quantity;
@@ -69,7 +70,7 @@ namespace FoodOrderingApi.Models
             _repoWrapper.Save();
         }
 
-        internal void PlaceOrder(int cartId)
+        public void PlaceOrder(int cartId)
         {
             // create new order
             _repoWrapper.Order.Create(new Order { CartId = cartId, TimePlaced = DateTime.Now });

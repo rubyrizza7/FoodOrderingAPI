@@ -39,6 +39,9 @@ namespace FoodOrderingApi
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddScoped(typeof(IDataRepository<>), typeof(DataRepository<>));
 
+            // cart manager injection
+            services.AddScoped<ICartManager, CartManager>();
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

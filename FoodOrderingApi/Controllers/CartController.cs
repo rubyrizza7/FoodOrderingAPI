@@ -16,11 +16,10 @@ namespace FoodOrderingApi.Controllers
     {
 
         private IRepositoryWrapper _repoWrapper;
-        private CartManager _cartManager;
+        
         public CartController(IRepositoryWrapper repoWrapper)
         {
             _repoWrapper = repoWrapper;
-            _cartManager = new CartManager(repoWrapper);
         }
 
         // GET: api/<CartController>
