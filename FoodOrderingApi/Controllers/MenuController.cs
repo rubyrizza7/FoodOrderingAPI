@@ -23,40 +23,68 @@ namespace FoodOrderingApi.Controllers
 
         // GET: api/<MenuController>
         [HttpGet]
-        public IEnumerable<MenuItem> Get()
+        public IActionResult Get()
         {
-            return _repoWrapper.MenuItem.GetAll();
+            return Ok(_repoWrapper.MenuItem.GetAll());
         }
 
         // GET api/<MenuController>/5
         [HttpGet("{id}")]
-        public MenuItem Get(int id)
+        public IActionResult Get(int? id)
         {
-            return _repoWrapper.MenuItem.FindByCondition(x => x.MenuItemId.Equals(id)).Single();
+            if (id == null) return BadRequest();
+
+            var menuItem = RetrieveMenuItem(id);
+
+            if (menuItem == null) return NotFound();
+            
+            return Ok(menuItem);
         }
 
         // POST api/<MenuController>
         [HttpPost]
-        public void Post([FromBody] MenuItem value)
+        public IActionResult Post([FromBody] MenuItem value)
         {
             _repoWrapper.MenuItem.Create(value);
             _repoWrapper.Save();
+
+            return Ok();
         }
 
         // PUT api/<MenuController>/5
         [HttpPut()]
-        public void Put([FromBody] MenuItem value)
+        public IActionResult Put([FromBody] MenuItem value)
         {
+            if (value == null) return BadRequest();
+
+            var menuItem = RetrieveMenuItem(value.MenuItemId);
+
+            if (menuItem == null) return NotFound();
+
             _repoWrapper.MenuItem.Update(value);
             _repoWrapper.Save();
+            return Ok();
         }
 
         // DELETE api/<MenuController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int? id)
         {
-            _repoWrapper.MenuItem.Delete(Get(id));
+            if (id == null) return BadRequest();
+
+            var menuItem = RetrieveMenuItem(id);
+
+            if (menuItem == null) return NotFound();
+
+            _repoWrapper.MenuItem.Delete(menuItem);
             _repoWrapper.Save();
+
+            return Ok();
+        }
+
+        private MenuItem RetrieveMenuItem(int? itemId)
+        {
+            return _repoWrapper.MenuItem.FindByCondition(x => x.MenuItemId.Equals(itemId)).Single();
         }
     }
 }
