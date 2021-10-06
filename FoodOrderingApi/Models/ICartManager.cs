@@ -6,6 +6,5 @@
         void NewSelection(NewSelection value);
         void PlaceOrder(int cartId);
         void UpdateSelectionQty(Selection currentSelection, int value);
-        void UpdateTotalPrice(int cartId);
     }
 }

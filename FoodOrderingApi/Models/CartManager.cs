@@ -17,6 +17,8 @@ namespace FoodOrderingApi.Models
 
         public void UpdateSelectionQty(Selection currentSelection, int value)
         {
+            CheckIsModfiable(currentSelection.CartId);
+
             currentSelection.UpdateQty(value);
 
             // if qty > 0 then update existing otherwise delete selection
@@ -43,7 +45,7 @@ namespace FoodOrderingApi.Models
             return newCart;
         }
 
-        public void UpdateTotalPrice(int cartId)
+        private void UpdateTotalPrice(int cartId)
         {
             // get cart
             Cart cart = _repoWrapper.Cart.FindByCondition(x => x.CartId.Equals(cartId)).Single();
@@ -60,21 +62,37 @@ namespace FoodOrderingApi.Models
             _repoWrapper.Cart.Update(cart);
         }
 
-        public void NewSelection(NewSelection value)
+        public void NewSelection(NewSelection newSelection)
         {
+            CheckIsModfiable(newSelection.CartId);
+
             // get item price
-            double selectionPrice = _repoWrapper.MenuItem.FindByCondition(x => x.MenuItemId.Equals(value.MenuItemId)).Single().Price * value.Quantity;
+            double selectionPrice = _repoWrapper.MenuItem.FindByCondition(x => x.MenuItemId.Equals(newSelection.MenuItemId)).Single().Price * newSelection.Quantity;
 
             // create new selection
-            _repoWrapper.Selection.Create(new Selection { MenuItemId = value.MenuItemId, CartId = value.CartId, Quantity = value.Quantity, SelectionPrice = selectionPrice });
+            _repoWrapper.Selection.Create(new Selection { MenuItemId = newSelection.MenuItemId, CartId = newSelection.CartId, Quantity = newSelection.Quantity, SelectionPrice = selectionPrice });
             _repoWrapper.Save();
         }
 
         public void PlaceOrder(int cartId)
         {
+            CheckIsModfiable(cartId);
+
             // create new order
             _repoWrapper.Order.Create(new Order { CartId = cartId, TimePlaced = DateTime.Now });
             _repoWrapper.Save();
+        }
+
+        // checks if an order is assosiated.  If so no further changes should be made to the cart.
+        private void CheckIsModfiable(int cartId)
+        {
+            // get queried cart
+            int assosiatedOrdersCount =  _repoWrapper.Order.FindByCondition(x => x.CartId.Equals(cartId)).Count();
+
+            if (assosiatedOrdersCount > 0)
+            {
+                throw new Exception("This cart cannot be modified because it has an assosiated order.");
+            }
         }
     }
 }
