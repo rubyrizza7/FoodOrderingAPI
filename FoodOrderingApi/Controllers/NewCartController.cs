@@ -20,9 +20,9 @@ namespace FoodOrderingApi.Controllers
 
         // GET: api/<NewCartController>
         [HttpGet]
-        public Cart Get()
+        public IActionResult Get()
         {
-            return _cartManager.NewCart();
+            return Ok(_cartManager.NewCart());
         }
 
 

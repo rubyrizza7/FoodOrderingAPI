@@ -23,23 +23,30 @@ namespace FoodOrderingApi.Controllers
 
         // GET: api/<OrderController>
         [HttpGet]
-        public IEnumerable<Order> Get()
+        public IActionResult Get()
         {
-            return  _repoWrapper.Order.GetAll();
+            return  Ok(_repoWrapper.Order.GetAll());
         }
 
         // GET api/<OrderController>/5
         [HttpGet("{id}")]
-        public Order Get(int id)
+        public IActionResult Get(int? id)
         {
-            return _repoWrapper.Order.FindByCondition(x => x.OrderId.Equals(id)).Single();
+            if (id == null) return BadRequest();
+            
+            Order order = _repoWrapper.Order.FindByCondition(x => x.OrderId.Equals(id)).Single();
+
+            if (order == null) return NotFound();
+
+            return Ok(order);
         }
 
         // POST api/<OrderController>
         [HttpPost]
-        public void Post([FromBody] int cartId)
+        public IActionResult Post([FromBody] int cartId)
         {
-            _cartManager.PlaceOrder(cartId);
+            
+            return Ok(_cartManager.PlaceOrder(cartId));
         }
 
     }

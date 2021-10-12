@@ -15,14 +15,14 @@ namespace FoodOrderingApi.Models
             _repoWrapper = repoWrapper;
         }
 
-        public void UpdateSelectionQty(Selection currentSelection, int value)
+        public int UpdateSelectionQty(Selection currentSelection, int value)
         {
             CheckIsModfiable(currentSelection.CartId);
 
-            currentSelection.UpdateQty(value);
+            int newQuantity = currentSelection.UpdateQty(value);
 
             // if qty > 0 then update existing otherwise delete selection
-            if (currentSelection.Quantity > 0)
+            if (newQuantity > 0)
             {
                 _repoWrapper.Selection.Update(currentSelection);
             }
@@ -33,6 +33,8 @@ namespace FoodOrderingApi.Models
 
             UpdateTotalPrice(currentSelection.CartId);
             _repoWrapper.Save();
+
+            return newQuantity;
         }
 
         // creates a new cart and returns it
@@ -62,7 +64,7 @@ namespace FoodOrderingApi.Models
             _repoWrapper.Cart.Update(cart);
         }
 
-        public void NewSelection(NewSelection newSelection)
+        public Selection NewSelection(SelectionDTO newSelection)
         {
             CheckIsModfiable(newSelection.CartId);
 
@@ -70,17 +72,23 @@ namespace FoodOrderingApi.Models
             double selectionPrice = _repoWrapper.MenuItem.FindByCondition(x => x.MenuItemId.Equals(newSelection.MenuItemId)).Single().Price * newSelection.Quantity;
 
             // create new selection
-            _repoWrapper.Selection.Create(new Selection { MenuItemId = newSelection.MenuItemId, CartId = newSelection.CartId, Quantity = newSelection.Quantity, SelectionPrice = selectionPrice });
+            Selection selection = new Selection { MenuItemId = newSelection.MenuItemId, CartId = newSelection.CartId, Quantity = newSelection.Quantity, SelectionPrice = selectionPrice };
+            _repoWrapper.Selection.Create(selection);
             _repoWrapper.Save();
+
+            return selection;
         }
 
-        public void PlaceOrder(int cartId)
+        public Order PlaceOrder(int cartId)
         {
             CheckIsModfiable(cartId);
 
             // create new order
-            _repoWrapper.Order.Create(new Order { CartId = cartId, TimePlaced = DateTime.Now });
+            Order order = new Order { CartId = cartId, TimePlaced = DateTime.Now };
+            _repoWrapper.Order.Create(order);
             _repoWrapper.Save();
+            
+            return order;
         }
 
         // checks if an order is assosiated.  If so no further changes should be made to the cart.

@@ -23,41 +23,60 @@ namespace FoodOrderingApi.Controllers
 
         // GET: api/<SelectionController>
         [HttpGet]
-        public IEnumerable<Selection> Get()
+        public IActionResult Get()
         {
-            return _repoWrapper.Selection.GetAll();
+            return Ok(_repoWrapper.Selection.GetAll());
         }
 
         // GET api/<SelectionController>/5
         [HttpGet("{cartId}/{menuItemId}")]
-        public Selection Get(int cartId, int menuItemId)
+        public IActionResult Get(int? cartId, int? menuItemId)
         {
-            return _repoWrapper.Selection.FindByCondition(x => x.MenuItemId.Equals(menuItemId) && x.CartId.Equals(cartId)).Single();
+            if (cartId == null || menuItemId == null) return BadRequest();
+
+            Selection selection = _repoWrapper.Selection.FindByCondition(x => x.MenuItemId.Equals(menuItemId) && x.CartId.Equals(cartId)).Single();
+
+            if (selection == null) return NotFound();
+
+            return Ok(selection);
         }
 
         // POST api/<SelectionController>
         [HttpPost]
         // Add to cart button
-        public void Post([FromBody] NewSelection value)
+        public IActionResult Post([FromBody] SelectionDTO value)
         {
-            _cartManager.NewSelection(value);
+            return Ok(_cartManager.NewSelection(value));
         }
 
         // PUT api/<SelectionController>/5
         // change quantity
         [HttpPut("{cartId}/{menuItemId}/{changeInQty}")]
-        public void Put(int cartId, int menuItemId, int changeInQty)
+        public IActionResult Put(int? cartId, int? menuItemId, int? changeInQty)
         {
-            var currentSelection = Get(cartId, menuItemId);
-            _cartManager.UpdateSelectionQty(currentSelection, changeInQty);
+            if (cartId == null || menuItemId == null || changeInQty == null) return BadRequest();
+
+            Selection selection = _repoWrapper.Selection.FindByCondition(x => x.MenuItemId.Equals(menuItemId) && x.CartId.Equals(cartId)).Single();
+
+            if (selection == null) return NotFound();
+
+            return Ok(_cartManager.UpdateSelectionQty(selection, changeInQty.GetValueOrDefault()));
         }
 
         // DELETE api/<SelectionController>/5
         // Not implemented
         [HttpDelete("{cartId}/{menuItemId}")]
-        public void Delete(int cartId, int menuItemId)
+        public IActionResult Delete(int? cartId, int? menuItemId)
         {
-            _repoWrapper.Selection.Delete(Get(cartId, menuItemId));
+            if (cartId == null || menuItemId == null) return BadRequest();
+
+            Selection selection = _repoWrapper.Selection.FindByCondition(x => x.MenuItemId.Equals(menuItemId) && x.CartId.Equals(cartId)).Single();
+
+            if (selection == null) return NotFound();
+
+            _repoWrapper.Selection.Delete(selection);
+
+            return Ok();
         }
     }
 }
