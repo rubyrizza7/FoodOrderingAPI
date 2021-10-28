@@ -15,11 +15,13 @@ namespace FoodOrderingApi.Models
             _repoWrapper = repoWrapper;
         }
 
-        public int UpdateSelectionQty(Selection currentSelection, int value)
+        private Selection UpdateSelectionQty(int cartId, int menuItemId, int newQty)
         {
+            Selection currentSelection = _repoWrapper.Selection.FindByCondition(x => x.MenuItemId.Equals(menuItemId) && x.CartId.Equals(cartId)).Single();
+
             CheckIsModfiable(currentSelection.CartId);
 
-            int newQuantity = currentSelection.UpdateQty(value);
+            int newQuantity = currentSelection.UpdateQty(newQty);
 
             // if qty > 0 then update existing otherwise delete selection
             if (newQuantity > 0)
@@ -34,7 +36,7 @@ namespace FoodOrderingApi.Models
             UpdateTotalPrice(currentSelection.CartId);
             _repoWrapper.Save();
 
-            return newQuantity;
+            return currentSelection;
         }
 
         // creates a new cart and returns it
@@ -64,16 +66,21 @@ namespace FoodOrderingApi.Models
             _repoWrapper.Cart.Update(cart);
         }
 
-        public Selection NewSelection(SelectionDTO newSelection)
+        private Selection NewSelection(SelectionDTO newSelection)
         {
             CheckIsModfiable(newSelection.CartId);
 
-            // get item price
-            double selectionPrice = _repoWrapper.MenuItem.FindByCondition(x => x.MenuItemId.Equals(newSelection.MenuItemId)).Single().Price * newSelection.Quantity;
+            // get menu item and price
+            MenuItem menuItem = _repoWrapper.MenuItem.FindByCondition(x => x.MenuItemId.Equals(newSelection.MenuItemId)).Single();
+            double selectionPrice = menuItem.Price * newSelection.Quantity;
 
             // create new selection
-            Selection selection = new Selection { MenuItemId = newSelection.MenuItemId, CartId = newSelection.CartId, Quantity = newSelection.Quantity, SelectionPrice = selectionPrice };
+            Selection selection = new Selection {MenuItemId = newSelection.MenuItemId, CartId = newSelection.CartId, Quantity = newSelection.Quantity, SelectionPrice = selectionPrice };
             _repoWrapper.Selection.Create(selection);
+
+            // update cart total
+            _repoWrapper.Cart.FindByCondition(x => x.CartId == newSelection.CartId).Single().TotalPrice += selectionPrice;
+
             _repoWrapper.Save();
 
             return selection;
@@ -100,6 +107,21 @@ namespace FoodOrderingApi.Models
             if (assosiatedOrdersCount > 0)
             {
                 throw new Exception("This cart cannot be modified because it has an assosiated order.");
+            }
+        }
+
+        public Selection UpdateOrCreateSelection(SelectionDTO value)
+        {
+            // see if a selection with this cart an menu id exists
+            int count = _repoWrapper.Selection.FindByCondition(x => x.MenuItemId.Equals(value.MenuItemId) && x.CartId.Equals(value.CartId)).Count();
+
+            if (count > 0)
+            {
+                // update
+                return UpdateSelectionQty(value.CartId, value.MenuItemId, value.Quantity);
+            }
+            else {
+                return NewSelection(value);
             }
         }
     }

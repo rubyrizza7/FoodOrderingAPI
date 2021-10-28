@@ -11,9 +11,9 @@ namespace FoodOrderingApi.Models.DataAccess
     {
         private OrderingContext _repoContext;
         private IDataRepository<MenuItem> _menuItem;
-        private IDataRepository<Selection> _selection;
-        private IDataRepository<Order> _order;
-        private IDataRepository<Cart> _cart;
+        private ISelectionRepository _selection;
+        private IOrderRepository _order;
+        private ICartRepository _cart;
         public IDataRepository<MenuItem> MenuItem
         {
             get
@@ -21,7 +21,7 @@ namespace FoodOrderingApi.Models.DataAccess
                 return _menuItem;
             }
         }
-        public IDataRepository<Selection> Selection
+        public ISelectionRepository Selection
         {
             get
             {
@@ -36,8 +36,7 @@ namespace FoodOrderingApi.Models.DataAccess
                 return _order;
             }
         }
-
-        public IDataRepository<Cart> Cart
+        public ICartRepository Cart
         {
             get
             {
@@ -45,7 +44,8 @@ namespace FoodOrderingApi.Models.DataAccess
             }
         }
 
-        public RepositoryWrapper(OrderingContext context, IDataRepository<MenuItem> menuRepo, IDataRepository<Selection> selectionRepo, IDataRepository<Cart> cartRepo, IDataRepository<Order> orderRepo)
+
+        public RepositoryWrapper(OrderingContext context, IDataRepository<MenuItem> menuRepo, ISelectionRepository selectionRepo, ICartRepository cartRepo, IOrderRepository orderRepo)
         {
             _repoContext = context;
             _menuItem = menuRepo;

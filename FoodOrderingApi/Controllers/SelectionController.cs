@@ -46,22 +46,31 @@ namespace FoodOrderingApi.Controllers
         // Add to cart button
         public IActionResult Post([FromBody] SelectionDTO value)
         {
-            return Ok(_cartManager.NewSelection(value));
+            // create new selection
+            _cartManager.UpdateOrCreateSelection(value);
+
+            // return new state of cart
+            return Ok(_repoWrapper.Cart.FindByCondition(x => x.CartId.Equals(value.CartId)).Single());
         }
 
+        /*
         // PUT api/<SelectionController>/5
         // change quantity
-        [HttpPut("{cartId}/{menuItemId}/{changeInQty}")]
-        public IActionResult Put(int? cartId, int? menuItemId, int? changeInQty)
+        [HttpPut("{cartId}/{menuItemId}/{newQty}")]
+        public IActionResult Put(int? cartId, int? menuItemId, int? newQty)
         {
-            if (cartId == null || menuItemId == null || changeInQty == null) return BadRequest();
+            if (cartId == null || menuItemId == null || newQty == null) return BadRequest();
 
             Selection selection = _repoWrapper.Selection.FindByCondition(x => x.MenuItemId.Equals(menuItemId) && x.CartId.Equals(cartId)).Single();
 
             if (selection == null) return NotFound();
 
-            return Ok(_cartManager.UpdateSelectionQty(selection, changeInQty.GetValueOrDefault()));
-        }
+            // update
+            _cartManager.UpdateSelectionQty(selection, newQty.GetValueOrDefault());
+
+            // rteurn state of cart
+            return Ok(_repoWrapper.Cart.FindByCondition(x => x.CartId.Equals(cartId)).Single());
+        }*/
 
         // DELETE api/<SelectionController>/5
         // Not implemented

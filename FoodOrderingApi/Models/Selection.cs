@@ -23,10 +23,10 @@ namespace FoodOrderingApi.Models
         // navigational
         public virtual MenuItem MenuItem { get; set; }
 
-        internal int UpdateQty(int changeInQty)
+        internal int UpdateQty(int newQty)
         {
             // update value
-            Quantity += changeInQty;
+            Quantity = newQty;
             // update price 
             SelectionPrice = Quantity * MenuItem.Price;
 

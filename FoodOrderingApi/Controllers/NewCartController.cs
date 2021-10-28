@@ -12,17 +12,23 @@ namespace FoodOrderingApi.Controllers
     [ApiController]
     public class NewCartController : ControllerBase
     {
-        private ICartManager _cartManager;
+        private readonly ICartManager _cartManager;
+        private readonly IRepositoryWrapper _repoWrapper;
+
         public NewCartController(IRepositoryWrapper repoWrapper, ICartManager cartManager)
         {
             _cartManager = cartManager;
+            _repoWrapper = repoWrapper;
         }
 
         // GET: api/<NewCartController>
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_cartManager.NewCart());
+            Cart newCart = _cartManager.NewCart();
+
+            // return new state of cart
+            return Ok(_repoWrapper.Cart.FindByCondition(x => x.CartId.Equals(newCart.CartId)).Single());
         }
 
 

@@ -38,10 +38,9 @@ namespace FoodOrderingApi
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000")
-                                        .AllowAnyHeader()
-                                        .AllowAnyMethod();
+                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
+                
             });
 
 
@@ -52,6 +51,9 @@ namespace FoodOrderingApi
             // add repository
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
             services.AddScoped(typeof(IDataRepository<>), typeof(DataRepository<>));
+            services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ISelectionRepository, SelectionRepository>();
 
             // cart manager injection
             services.AddScoped<ICartManager, CartManager>();
