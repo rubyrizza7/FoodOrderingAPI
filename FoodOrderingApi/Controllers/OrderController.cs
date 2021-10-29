@@ -43,10 +43,10 @@ namespace FoodOrderingApi.Controllers
 
         // POST api/<OrderController>
         [HttpPost]
-        public IActionResult Post([FromBody] int cartId)
+        public IActionResult Post([FromBody] OrderDTO newOrder)
         {
             
-            return Ok(_cartManager.PlaceOrder(cartId));
+            return Ok(_cartManager.PlaceOrder(newOrder));
         }
 
     }

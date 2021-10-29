@@ -3,7 +3,7 @@
     public interface ICartManager
     {
         Cart NewCart();
-        Order PlaceOrder(int cartId);
+        Order PlaceOrder(OrderDTO newOrder);
         Selection UpdateOrCreateSelection(SelectionDTO value);
     }
 }

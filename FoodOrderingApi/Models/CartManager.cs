@@ -86,12 +86,18 @@ namespace FoodOrderingApi.Models
             return selection;
         }
 
-        public Order PlaceOrder(int cartId)
+        public Order PlaceOrder(OrderDTO newOrder)
         {
-            CheckIsModfiable(cartId);
+            CheckIsModfiable(newOrder.CartId);
 
             // create new order
-            Order order = new Order { CartId = cartId, TimePlaced = DateTime.Now };
+            Order order = new Order { 
+                CartId = newOrder.CartId, 
+                TimePlaced = DateTime.Now, 
+                Address = newOrder.Address, 
+                Name = newOrder.Name
+            };
+
             _repoWrapper.Order.Create(order);
             _repoWrapper.Save();
             

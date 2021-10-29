@@ -20,5 +20,14 @@ namespace FoodOrderingApi.Models
 
         // Other Attributes
         public DateTime TimePlaced { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+    }
+
+    public class OrderDTO
+    {
+        public int CartId { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
     }
 }
